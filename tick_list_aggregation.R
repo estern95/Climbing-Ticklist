@@ -36,7 +36,8 @@ gs_ticks_raw <- gs_title("Climbing Log") %>%
          pitches = pitch_count,
          gps     = location,
          route_type = style) %>% 
-  mutate(grade = if_else(route_type != "Boulder", paste0("5.", grade), grade))
+  mutate(grade = if_else(route_type != "Boulder", paste0("5.", grade), grade)) %>% 
+  separate(gps, into = c("lat", "long"), sep = ",")
 
 fcts <- expand.grid(paste0("5.", 0:14), c("a", "-", "a/b", "b", "", "b/c", "c", "c/d", "+", "d")) %>% 
   unite(col = grade_fct, remove = F, sep = "") %>% 
