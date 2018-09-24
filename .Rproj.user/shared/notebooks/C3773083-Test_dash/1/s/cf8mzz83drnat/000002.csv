@@ -1,0 +1,5 @@
+"0","# load data in 'global' chunk so it can be shared by all users of the dashboard"
+"0","library(readr)"
+"0","library(shiny)"
+"2","package ‘shiny’ was built under R version 3.4.4"
+"0","ticks <- read_rds(""ticks.rds"")"

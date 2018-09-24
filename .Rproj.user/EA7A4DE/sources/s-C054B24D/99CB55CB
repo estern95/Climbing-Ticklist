@@ -1,0 +1,23 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1536236060350.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "33365666",
+    "id" : "99CB55CB",
+    "lastKnownWriteTime" : 1536239022,
+    "last_content_update" : 1536239022064,
+    "path" : "~/Documents/Climbing Ticklist/tick_list_aggregation.R",
+    "project_path" : "tick_list_aggregation.R",
+    "properties" : {
+        "cursorPosition" : "49,36",
+        "scrollLine" : "44",
+        "tempName" : "Untitled1"
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

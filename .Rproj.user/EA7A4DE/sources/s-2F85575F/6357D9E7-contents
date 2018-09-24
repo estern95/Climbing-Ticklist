@@ -1,0 +1,100 @@
+---
+title: "ggplot2 Brushing"
+output: 
+  flexdashboard::flex_dashboard:
+    orientation: columns
+    social: menu
+    source_code: embed
+runtime: shiny
+---
+
+```{r global, include=FALSE}
+# load data in 'global' chunk so it can be shared by all users of the dashboard
+library(readr)
+library(shiny)
+library(tidyverse)
+library(ggthemes)
+
+ticks <- read_rds("ticks.rds") %>% 
+    filter(route_type %in% c("Sport", "Trad"),
+           ticked == T) %>% 
+    group_by(num_grade, year) %>% 
+    mutate(Count = n()) %>% 
+    ungroup
+
+```
+
+
+```{r}
+# Reactive that returns the whole dataset if there is no brush
+selectedData <- reactive({
+  data <- clickOpts(ticks)
+  if (nrow(data) == 0)
+    data <- ticks
+  data %>% 
+    select(route, grade, route_type, year, notes)
+})
+```
+
+Column {data-width=650}
+-----------------------------------------------------------------------
+
+### Route by Year {data-width=600}
+
+```{r}
+
+
+
+plotOutput("plot1", brush = clickOpts(id = "plot1_brush"))
+output$plot1 <- renderPlot({
+    ticks %>%
+    ggplot() +
+    aes(x = num_grade,
+        fill = year,
+        y = Count) +
+    geom_bar(stat = "identity",
+             position = "dodge") +
+    scale_color_gdocs() +
+    theme_excel_new() +
+    theme(axis.text.x = element_text(angle = 45))
+})
+```
+
+### Route Type
+
+```{r}
+renderPlot({
+  
+  selectedData() %>% 
+    mutate(num_grade = str_remove_all(grade, "[-+abcd//]"),
+           num_grade = if_else(num_grade %in% c("5.1212", "5.1213"), "5.12", num_grade) %>% 
+             as_factor() %>% 
+             fct_relevel(paste0("5.", 0:14))) %>% 
+    group_by(num_grade,
+             route_type) %>% 
+    summarise(Count = n()) %>%
+    ungroup() %>% 
+    ggplot() +
+    aes(x = num_grade,
+        fill = route_type,
+        label = Count,
+        y     = Count) +
+    geom_bar(stat = "identity") +
+    geom_text(stat = "identity",
+              position = position_stack(vjust = .5)) +
+    scale_fill_gdocs() +
+    theme_excel_new() +
+    theme(axis.text.x = element_text(angle = 45))
+})
+```
+
+Column {data-width=450}
+-----------------------------------------------------------------------
+
+### Route Details {data-width=400}
+
+```{r}
+DT::renderDataTable({
+  selectedData()
+})
+```

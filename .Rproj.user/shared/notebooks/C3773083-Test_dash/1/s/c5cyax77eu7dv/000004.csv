@@ -1,0 +1,7 @@
+"0","# Reactive that returns the whole dataset if there is no brush"
+"0","selectedData <- reactive({"
+"0","  data <- brushedPoints(ticks, input$plot1_brush)"
+"0","  if (nrow(data) == 0)"
+"0","    data <- ticks"
+"0","  data"
+"0","})"

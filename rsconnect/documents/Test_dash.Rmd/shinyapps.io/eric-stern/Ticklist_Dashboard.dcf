@@ -1,0 +1,12 @@
+name: Ticklist_Dashboard
+title: Ticklist_Dashboard
+username:
+account: eric-stern
+server: shinyapps.io
+hostUrl: https://api.shinyapps.io/v1
+appId: 423572
+bundleId: 1572407
+url: https://eric-stern.shinyapps.io/Ticklist_Dashboard/
+when: 1536242096.87643
+asMultiple: FALSE
+asStatic: FALSE

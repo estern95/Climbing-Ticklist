@@ -1,0 +1,29 @@
+{
+    "collab_server" : "",
+    "contents" : "",
+    "created" : 1533113770264.000,
+    "dirty" : false,
+    "encoding" : "",
+    "folds" : "",
+    "hash" : "0",
+    "id" : "8875B3EA",
+    "lastKnownWriteTime" : 4323104304,
+    "last_content_update" : 1533113770264,
+    "path" : null,
+    "project_path" : null,
+    "properties" : {
+        "cacheKey" : "80C761B3",
+        "caption" : "mp_ticks_raw",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=mp_ticks_raw&cache_key=80C761B3",
+        "displayedObservations" : 499,
+        "environment" : "",
+        "object" : "mp_ticks_raw",
+        "preview" : 0,
+        "totalObservations" : 499,
+        "variables" : 8
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_dataframe"
+}
