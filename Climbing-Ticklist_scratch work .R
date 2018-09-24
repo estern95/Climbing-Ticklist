@@ -1,10 +1,12 @@
 library(tidyverse)
 library(httr)
 library(jsonlite)
+library(rvest)
 library(readr)
 library(dplyr)
 library(ggplot2)
 library(plotly)
+library(ggmap)
 # user_info <- "https://www.mountainproject.com/data/get-user?email=eric.stern1@gmail.com&key=109104070-683b2b72dd7bd52ea79b042e5aca9a3f"
 # tick_list <- "https://www.mountainproject.com/data/get-ticks?email=eric.stern1@gmail.com&key=109104070-683b2b72dd7bd52ea79b042e5aca9a3f"
 # 
@@ -36,6 +38,12 @@ library(plotly)
 #   
 
 
+# gps <- read_html("https://www.mountainproject.com/route/105750778/the-flying-beast
+# ") %>% 
+#   html_node("td") %>% 
+#   html_text()
+
+
 ticks <- read_rds("ticks.rds") %>% 
   mutate_at(vars(lat, long), as.numeric)
 
@@ -55,9 +63,20 @@ p <- ggplot() +
 ggplotly(p, tooltip = "text")
     
       
+# returns a map with sattelite overlay
+gs_ticks <- ticks %>% 
+  filter(!is.na(lat))
 
-
-
-arr <- USArrests %>% 
-  add_rownames("region") %>% 
-  mutate(region=tolower(region)) %>% View
+get_googlemap(center = c(mean(gs_ticks$long, na.rm = T), 
+                         mean(gs_ticks$lat, na.rm = T)), 
+              zoom = 4,
+              maptype = "satellite") %>%
+  ggmap() +
+  geom_point(data = gs_ticks,
+             mapping = 
+               aes(x = long, 
+                   y = lat),
+             color = "red")
+  
+  
+  
