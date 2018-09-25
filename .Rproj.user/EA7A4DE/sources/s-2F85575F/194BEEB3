@@ -12,15 +12,15 @@
     "path" : null,
     "project_path" : null,
     "properties" : {
-        "cacheKey" : "1E0B67BC",
+        "cacheKey" : "DEC9F013",
         "caption" : "ticks",
-        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=ticks&cache_key=1E0B67BC",
-        "displayedObservations" : "522",
+        "contentUrl" : "grid_resource/gridviewer.html?env=&obj=ticks&cache_key=DEC9F013",
+        "displayedObservations" : "395",
         "environment" : "",
         "object" : "ticks",
         "preview" : "0",
-        "totalObservations" : "522",
-        "variables" : "16"
+        "totalObservations" : "395",
+        "variables" : "17"
     },
     "relative_order" : 5,
     "source_on_save" : false,
