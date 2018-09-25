@@ -1,12 +1,4 @@
-library(tidyverse)
-library(httr)
-library(jsonlite)
-library(rvest)
-library(readr)
-library(dplyr)
-library(ggplot2)
-library(plotly)
-library(ggmap)
+
 # user_info <- "https://www.mountainproject.com/data/get-user?email=eric.stern1@gmail.com&key=109104070-683b2b72dd7bd52ea79b042e5aca9a3f"
 # tick_list <- "https://www.mountainproject.com/data/get-ticks?email=eric.stern1@gmail.com&key=109104070-683b2b72dd7bd52ea79b042e5aca9a3f"
 # 
@@ -45,7 +37,13 @@ library(ggmap)
 
 
 ticks <- read_rds("ticks.rds") %>% 
-  mutate_at(vars(lat, long), as.numeric)
+  mutate_at(vars(lat, long), as.numeric) %>% 
+  mutate(geo_out = map_if(location, !is.na(location), ~geocode(.))) %>% 
+  unnest(location) 
+  
+  coalesce(lat, lat) %>% 
+  coalesce(lon, long)
+
 
 us_map <- map_data("usa")
 
