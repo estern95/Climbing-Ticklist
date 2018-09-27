@@ -12,18 +12,35 @@ library(forcats)
 library(flexdashboard)
 
 # Read in old Mountainproject ticks 
-mp_ticks_raw <- read_csv(file = "MP ticks.csv") %>% 
-  rename_all(str_to_lower) %>%
-  rename_all(str_replace_all,
-             pattern     = " ",
-             replacement = "_") %>% 
-  select(date, route, notes, pitches, location, route_type, grade = rating) %>%
-  mutate(ticked = T)
-  #separate(grade, into = c("grade", "safety_rating"), sep = "^([^ ]*)") #currently broken
+# mp_ticks_raw <- read_csv(file = "MP ticks.csv") %>% 
+#   rename_all(str_to_lower) %>%
+#   rename_all(str_replace_all,
+#              pattern     = " ",
+#              replacement = "_") %>% 
+#   select(date, route, notes, pitches, location, route_type, grade = rating, url) %>%
+#   mutate(ticked = T)
+#   #separate(grade, into = c("grade", "safety_rating"), sep = "^([^ ]*)") #currently broken
+# 
+# mp_ticks <-  mp_ticks_raw %>% 
+#   mutate(raw_geocoord = map(url,
+#                             ~html_session(.) %>% 
+#                               follow_link(css = ".text-warm a:nth-child(4)") %>% 
+#                               html_node(".description-details tr:nth-child(2) td+ td") %>% 
+#                               html_text()))
+#   
+# write_rds(mp_ticks, "mp_ticks_scraped.rds")
 
+mp_ticks <- read_rds("mp_ticks_scraped.rds")
 
+mp_tick2 <- mp_ticks %>% 
+  mutate(latlong = str_remove_all(raw_geocoord, "\\s|\\\\n") %>% 
+           str_remove("GoogleMap&middotClimbingAreaMap"),
+         latlong = ifelse(str_detect(latlong, "total"), NA, latlong)) %>% 
+  separate(latlong, c("lat", "lon"), sep = ",") %>% 
+
+  select(date, route, notes, pitches, location, route_type, grade, lat, lon) 
   
-
+  
 # Read in googlesheets ticks
 gs_ticks_raw <- gs_title("Climbing Log") %>% 
   gs_read() %>% 
@@ -37,7 +54,7 @@ gs_ticks_raw <- gs_title("Climbing Log") %>%
          gps     = location,
          route_type = style) %>% 
   mutate(grade = if_else(route_type != "Boulder", paste0("5.", grade), grade)) %>% 
-  separate(gps, into = c("lat", "long"), sep = ",")
+  separate(gps, into = c("lon", "lat"), sep = ",")
 
 fcts <- expand.grid(paste0("5.", 0:14), c("a", "-", "a/b", "b", "", "b/c", "c", "c/d", "+", "d")) %>% 
   unite(col = grade_fct, remove = F, sep = "") %>% 
@@ -46,7 +63,7 @@ fcts <- expand.grid(paste0("5.", 0:14), c("a", "-", "a/b", "b", "", "b/c", "c", 
   arrange(Var1, Var2)
 
   
-  ticks <- mp_ticks_raw %>% 
+  ticks <- mp_tick2 %>% 
     bind_rows(gs_ticks_raw) %>% 
     separate(grade, into = c("grade", "seriousness"), sep = " ") %>% 
     mutate(year = as.character(year(date)),
