@@ -77,8 +77,7 @@ fcts <- expand.grid(paste0("5.", 0:14), c("a", "-", "a/b", "b", "", "b/c", "c", 
            num_grade = if_else(num_grade %in% c("5.1212", "5.1213"), "5.12", num_grade) %>% 
              as_factor() %>% 
              fct_relevel(paste0("5.", 0:14)),
-           year = ifelse(is.na(year), "2018", year)) %>% 
-    distinct(route, route_type, .keep_all = T)
+           year = ifelse(is.na(year), "2018", year))
 
   
 
