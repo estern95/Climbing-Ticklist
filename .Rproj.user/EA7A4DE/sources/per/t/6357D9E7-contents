@@ -17,10 +17,12 @@ library(ggthemes)
 
 ticks <- read_rds("ticks.rds") %>% 
     filter(route_type %in% c("Sport", "Trad"),
-           ticked == T) %>% 
+           ticked == T,
+           year   != 2010) %>% 
     group_by(num_grade, year) %>% 
     mutate(Count = n()) %>% 
-    ungroup
+    ungroup %>% 
+    arrange(num_grade, route, route_type)
 
 ```
 
@@ -28,12 +30,12 @@ ticks <- read_rds("ticks.rds") %>%
 ```{r}
 # Reactive that returns the whole dataset if there is no brush
 selectedData <- reactive({
-  data <- brushedPoints(ticks,
-                        input$plot1_brush)
+  data <- brushedPoints(ticks, input$plot1_brush)
   if (nrow(data) == 0)
     data <- ticks
   data %>% 
-    select(route, grade, route_type, year, notes)
+    select(route, grade, route_type, year, notes) %>% 
+    arrange(grade, route, route_type)
 })
 ```
 
@@ -51,10 +53,11 @@ output$plot1 <- renderPlot({
     ticks %>%
     ggplot() +
     aes(x = num_grade,
-        fill = year,
+        color = year,
+        group = year,
         y = Count) +
-    geom_bar(stat = "identity",
-             position = "dodge") +
+    geom_point() +
+    geom_line() +
     scale_color_gdocs() +
     theme_excel_new() +
     theme(axis.text.x = element_text(angle = 45))
@@ -95,7 +98,7 @@ Column {data-width=450}
 ### Route Details {data-width=400}
 
 ```{r}
-DT::renderDataTable({
+renderTable({
   selectedData()
 })
 ```
